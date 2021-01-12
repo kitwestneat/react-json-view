@@ -31,7 +31,6 @@ const config = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.optimize.UglifyJsPlugin()
   ],
   resolve: {
     extensions: [".js", ".json", ".css", ".scss"]

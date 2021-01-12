@@ -1,5 +1,5 @@
 import React from 'react';
-import {polyfill} from 'react-lifecycles-compat';
+import { polyfill } from 'react-lifecycles-compat';
 import { toType } from './../../helpers/util';
 
 //data type components
@@ -30,11 +30,11 @@ class RjvObject extends React.PureComponent {
         const state = RjvObject.getState(props);
         this.state = {
             ...state,
-            prevProps: {}
+            prevProps: {},
         };
     }
 
-    static getState = props => {
+    static getState = (props) => {
         const size = Object.keys(props.src).length;
         const expanded =
             (props.collapsed === false ||
@@ -44,7 +44,7 @@ class RjvObject extends React.PureComponent {
                     name: props.name,
                     src: props.src,
                     type: toType(props.src),
-                    namespace: props.namespace
+                    namespace: props.namespace,
                 }) === false) &&
             //initialize closed if object has no items
             size !== 0;
@@ -57,14 +57,15 @@ class RjvObject extends React.PureComponent {
             ),
             object_type: props.type === 'array' ? 'array' : 'object',
             parent_type: props.type === 'array' ? 'array' : 'object',
-            size
+            size,
         };
         return state;
-    }
+    };
 
     static getDerivedStateFromProps(nextProps, prevState) {
         const { prevProps } = prevState;
-        if (nextProps.src !== prevProps.src ||
+        if (
+            nextProps.src !== prevProps.src ||
             nextProps.collapsed !== prevProps.collapsed ||
             nextProps.name !== prevProps.name ||
             nextProps.namespace !== prevProps.namespace ||
@@ -73,24 +74,27 @@ class RjvObject extends React.PureComponent {
             const newState = RjvObject.getState(nextProps);
             return {
                 ...newState,
-                prevProps: nextProps
+                prevProps: nextProps,
             };
         }
         return null;
     }
 
     toggleCollapsed = () => {
-        this.setState({
-            expanded: !this.state.expanded
-        }, () => {
-            AttributeStore.set(
-                this.props.rjvId,
-                this.props.namespace,
-                'expanded',
-                this.state.expanded
-            );
-        });
-    }
+        this.setState(
+            {
+                expanded: !this.state.expanded,
+            },
+            () => {
+                AttributeStore.set(
+                    this.props.rjvId,
+                    this.props.namespace,
+                    'expanded',
+                    this.state.expanded
+                );
+            }
+        );
+    };
 
     getObjectContent = (depth, src, props) => {
         return (
@@ -103,7 +107,7 @@ class RjvObject extends React.PureComponent {
                 </div>
             </div>
         );
-    }
+    };
 
     getEllipsis = () => {
         const { size } = this.state;
@@ -122,13 +126,13 @@ class RjvObject extends React.PureComponent {
                 </div>
             );
         }
-    }
+    };
 
-    getObjectMetaData = src => {
+    getObjectMetaData = (src) => {
         const { rjvId, theme } = this.props;
         const { size } = this.state;
         return <VariableMeta size={size} {...this.props} />;
-    }
+    };
 
     getBraceStart(object_type, expanded) {
         const { src, theme, iconStyle, parent_type } = this.props;
@@ -146,22 +150,36 @@ class RjvObject extends React.PureComponent {
 
         const IconComponent = expanded ? ExpandedIcon : CollapsedIcon;
 
+        const onKeySelect =
+            this.props.onKeySelect &&
+            (() =>
+                this.props.onKeySelect({
+                    ...this.props.variable,
+                    namespace: this.props.namespace.slice(1),
+                    toggleCollapsed: () => this.toggleCollapsed,
+                }));
+
         return (
             <span>
-                <span
-                    onClick={e => {
-                        this.toggleCollapsed();
-                    }}
-                    {...Theme(theme, 'brace-row')}
-                >
+                <span {...Theme(theme, 'brace-row')}>
                     <div
+                        onClick={(e) => {
+                            this.toggleCollapsed();
+                        }}
                         class="icon-container"
                         {...Theme(theme, 'icon-container')}
                     >
                         <IconComponent {...{ theme, iconStyle }} />
                     </div>
-                    <ObjectName {...this.props} />
-                    <span {...Theme(theme, 'brace')}>
+                    <span onClick={onKeySelect}>
+                        <ObjectName {...this.props} />
+                    </span>
+                    <span
+                        onClick={(e) => {
+                            this.toggleCollapsed();
+                        }}
+                        {...Theme(theme, 'brace')}
+                    >
                         {object_type === 'array' ? '[' : '{'}
                     </span>
                 </span>
@@ -206,14 +224,14 @@ class RjvObject extends React.PureComponent {
                     ? this.getObjectContent(depth, src, {
                         theme,
                         iconStyle,
-                        ...rest
+                        ...rest,
                     })
                     : this.getEllipsis()}
                 <span class="brace-row">
                     <span
                         style={{
                             ...Theme(theme, 'brace').style,
-                            paddingLeft: expanded ? '3px' : '0px'
+                            paddingLeft: expanded ? '3px' : '0px',
                         }}
                     >
                         {object_type === 'array' ? ']' : '}'}
@@ -230,7 +248,7 @@ class RjvObject extends React.PureComponent {
             parent_type,
             index_offset,
             groupArraysAfterLength,
-            namespace
+            namespace,
         } = this.props;
         const { object_type } = this.state;
         let theme = props.theme;
@@ -240,7 +258,7 @@ class RjvObject extends React.PureComponent {
         if (this.props.sortKeys) {
             keys = keys.sort();
         }
-        keys.forEach(name => {
+        keys.forEach((name) => {
             variable = new JsonVariable(name, variables[name]);
 
             if (parent_type === 'array_group' && index_offset) {
@@ -296,7 +314,7 @@ class RjvObject extends React.PureComponent {
             }
         });
         return elements;
-    }
+    };
 }
 
 //just store name, value and type with a variable

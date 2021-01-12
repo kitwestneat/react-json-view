@@ -57,8 +57,7 @@
     },
     "scripts": {
         "build":
-            "webpack --config webpack/webpack.config.js -p --display-error-details --progress --optimize-minimize",
-        "prebuild": "npm run test:unit",
+            "webpack --config webpack/webpack.config.js --define process.env.NODE_ENV='\"production\"' --display-error-details --progress",
         "build:demo":
             "webpack --config webpack/webpack.config-demo.js -p --display-error-details --progress --optimize-minimize",
         "dev":

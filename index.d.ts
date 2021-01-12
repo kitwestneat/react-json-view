@@ -112,6 +112,12 @@ export interface ReactJsonViewProps {
    */
   onDelete?: ((del: InteractionProps) => false | any) | false;
   /**
+   * When a function is passed in, clicking a key triggers the onKeySelect method to be called.
+   *
+   * Default: false
+   */
+  onKeySelect?: ((select: OnSelectProps) => void) | false;
+  /**
    * When a function is passed in, clicking a value triggers the onSelect method to be called.
    *
    * Default: false
